@@ -1,0 +1,1131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LUMORA — Beauty Edit</title>
+<meta name="robots" content="index,follow">
+<style>
+:root{
+  --p:#F4EDE5;
+  --e:#211B1A;
+  --r:#A97867;
+  --d:#DED3C9;
+  --m:#766962;
+  --s:#EAE0D7;
+  --white:#FFFDFC;
+}
+*{box-sizing:border-box}
+html{
+  scroll-behavior:smooth;
+  background:var(--p);
+  scrollbar-width:none;
+  -ms-overflow-style:none;
+}
+html::-webkit-scrollbar,
+body::-webkit-scrollbar{width:0;height:0}
+body{
+  margin:0;
+  background:var(--p);
+  color:var(--e);
+  font-family:Arial,Helvetica,sans-serif;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+  overscroll-behavior-y:none;
+}
+body.is-locked{overflow:hidden}
+button,input,select{font:inherit}
+button{appearance:none;-webkit-appearance:none}
+.lumora{
+  width:100%;
+  max-width:1480px;
+  margin:0 auto;
+  padding:72px clamp(20px,4.6vw,72px) 96px;
+}
+.kicker{
+  margin:0 0 16px;
+  color:var(--r);
+  font-size:10px;
+  font-weight:600;
+  letter-spacing:.25em;
+  text-transform:uppercase;
+}
+h1{
+  margin:0;
+  font:400 clamp(47px,6vw,82px)/.91 Georgia,"Times New Roman",serif;
+  letter-spacing:-.035em;
+}
+.intro{
+  max-width:650px;
+  margin:25px 0 56px;
+  color:var(--m);
+  font-size:14px;
+  line-height:1.9;
+}
+.toolbar{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) auto;
+  gap:24px;
+  padding:18px 0;
+  border-top:1px solid var(--d);
+  border-bottom:1px solid var(--d);
+  margin-bottom:42px;
+}
+.filters{
+  display:flex;
+  flex-wrap:wrap;
+  align-items:center;
+  gap:3px 7px;
+}
+.filter{
+  border:0;
+  border-bottom:1px solid transparent;
+  background:transparent;
+  color:var(--m);
+  padding:8px 7px 9px;
+  cursor:pointer;
+  font-size:9px;
+  font-weight:600;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  transition:color .2s ease,border-color .2s ease;
+}
+.filter:hover,.filter.active{
+  color:var(--e);
+  border-color:var(--r);
+}
+.filter:focus-visible,
+.search:focus-visible,
+.sort:focus-visible,
+.view:focus-visible,
+.load:focus-visible,
+.detail-close:focus-visible,
+.order:focus-visible{
+  outline:2px solid var(--r);
+  outline-offset:4px;
+}
+.controls{
+  display:flex;
+  gap:18px;
+  align-items:center;
+}
+.search{
+  width:205px;
+  border:0;
+  border-bottom:1px solid var(--d);
+  background:transparent;
+  color:var(--e);
+  outline:0;
+  padding:8px 0;
+  font-size:10px;
+  letter-spacing:.08em;
+}
+.search::placeholder{color:var(--m);opacity:.9}
+.search:focus{border-color:var(--r)}
+.sort{
+  min-width:148px;
+  border:0;
+  border-bottom:1px solid var(--d);
+  background:var(--p);
+  color:var(--e);
+  padding:8px 22px 8px 0;
+  outline:0;
+  font-size:9px;
+  font-weight:600;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+}
+.meta{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  margin:-18px 0 30px;
+  color:var(--m);
+  font-size:9px;
+  letter-spacing:.16em;
+  text-transform:uppercase;
+}
+.count{color:var(--r)}
+.grid{
+  display:grid;
+  grid-template-columns:repeat(4,minmax(0,1fr));
+  gap:62px 24px;
+}
+.product{min-width:0}
+.image{
+  position:relative;
+  aspect-ratio:4/5;
+  background:var(--s);
+  overflow:hidden;
+  margin-bottom:19px;
+}
+.image img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+  padding:5%;
+  transition:transform .55s cubic-bezier(.2,.65,.25,1);
+}
+.product:hover .image img{transform:scale(1.025)}
+.placeholder{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  padding:25px;
+  color:var(--m);
+  font-size:8px;
+  line-height:1.7;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+}
+.index{
+  position:absolute;
+  z-index:2;
+  left:14px;
+  top:14px;
+  width:27px;
+  height:27px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid rgba(33,27,26,.14);
+  background:rgba(244,237,229,.84);
+  font-size:8px;
+}
+.cat{
+  margin-bottom:8px;
+  color:var(--r);
+  font-size:8px;
+  font-weight:600;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+}
+.name{
+  min-height:43px;
+  margin:0 0 9px;
+  font:400 19px/1.15 Georgia,"Times New Roman",serif;
+  letter-spacing:-.01em;
+}
+.price{
+  margin-bottom:15px;
+  font-size:11px;
+  font-weight:600;
+  letter-spacing:.08em;
+}
+.view{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  min-height:39px;
+  min-width:126px;
+  padding:10px 15px;
+  border:1px solid var(--e);
+  background:var(--e);
+  color:var(--p);
+  text-decoration:none;
+  cursor:pointer;
+  font-size:8px;
+  font-weight:600;
+  letter-spacing:.18em;
+  text-transform:uppercase;
+  transition:background .2s ease,color .2s ease,border-color .2s ease,transform .2s ease;
+}
+.view:hover{
+  background:var(--r);
+  border-color:var(--r);
+  color:var(--p);
+  transform:translateY(-1px);
+}
+.actions{
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  gap:12px;
+  margin-top:76px;
+}
+.load{
+  min-width:154px;
+  min-height:44px;
+  border:1px solid var(--e);
+  background:var(--e);
+  color:var(--p);
+  padding:13px 22px;
+  cursor:pointer;
+  font-size:9px;
+  font-weight:600;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  transition:background .2s ease,color .2s ease,border-color .2s ease,transform .2s ease;
+}
+.load:hover{
+  background:var(--r);
+  border-color:var(--r);
+  color:var(--p);
+  transform:translateY(-1px);
+}
+.load.less{
+  display:none;
+  border-color:var(--e);
+  background:transparent;
+  color:var(--e);
+}
+.load.less:hover{
+  background:var(--e);
+  color:var(--p);
+}
+.empty{
+  display:none;
+  text-align:center;
+  padding:110px 20px;
+}
+.empty h2{
+  margin:0 0 10px;
+  font:400 31px Georgia,"Times New Roman",serif;
+}
+.empty p{margin:0;color:var(--m);font-size:11px}
+@media(max-width:1050px){
+  .grid{grid-template-columns:repeat(3,minmax(0,1fr))}
+}
+@media(max-width:780px){
+  .lumora{padding:58px 18px 78px}
+  .toolbar{display:block;margin-bottom:34px}
+  .controls{margin-top:18px;gap:16px}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr));gap:46px 14px}
+  .name{font-size:16px;min-height:38px}
+  .search{flex:1;min-width:0}
+  .view{width:100%;min-width:0}
+  .actions{margin-top:60px}
+}
+@media(max-width:480px){
+  .lumora{padding-top:50px}
+  h1{font-size:47px}
+  .intro{font-size:13px;margin-bottom:46px}
+  .controls{display:grid;grid-template-columns:1fr}
+  .search,.sort{width:100%}
+  .filters{gap:2px 2px}
+  .filter{padding-left:5px;padding-right:5px}
+  .meta{margin-top:-10px}
+  .grid{gap:40px 12px}
+  .image{margin-bottom:16px}
+  .name{font-size:15px;line-height:1.18}
+  .price{font-size:10px}
+  .view{min-height:40px;font-size:8px}
+  .actions{flex-direction:column;gap:8px}
+  .load{width:min(100%,220px)}
+}
+.detail-backdrop{
+  position:fixed;
+  inset:0;
+  z-index:1000;
+  display:none;
+  align-items:center;
+  justify-content:center;
+  padding:18px;
+  background:rgba(33,27,26,.52);
+  -webkit-backdrop-filter:blur(3px);
+  backdrop-filter:blur(3px);
+  overscroll-behavior:contain;
+}
+.detail-backdrop.open{display:flex}
+.detail{
+  position:relative;
+  width:min(1080px,100%);
+  max-height:min(90vh,900px);
+  overflow:auto;
+  scrollbar-width:none;
+  -ms-overflow-style:none;
+  background:var(--p);
+  display:grid;
+  grid-template-columns:minmax(300px,1fr) minmax(300px,1fr);
+  box-shadow:0 30px 90px rgba(33,27,26,.28);
+  overscroll-behavior:contain;
+  border:1px solid rgba(33,27,26,.08);
+}
+.detail::-webkit-scrollbar{width:0;height:0}
+.detail-close{
+  position:absolute;
+  right:16px;
+  top:14px;
+  width:38px;
+  height:38px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  border:1px solid rgba(33,27,26,.14);
+  border-radius:50%;
+  background:rgba(244,237,229,.9);
+  color:var(--e);
+  font-size:24px;
+  line-height:1;
+  cursor:pointer;
+  z-index:3;
+}
+.detail-media{
+  min-height:540px;
+  background:var(--s);
+  position:relative;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+}
+.detail-media img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  padding:7%;
+  display:block;
+}
+.detail-media .placeholder{
+  position:absolute;
+  min-height:0;
+}
+.detail-copy{
+  min-width:0;
+  padding:clamp(34px,5vw,64px);
+  display:flex;
+  flex-direction:column;
+  justify-content:center;
+}
+.detail-cat{
+  color:var(--r);
+  font-size:10px;
+  font-weight:600;
+  letter-spacing:.25em;
+  text-transform:uppercase;
+  margin-bottom:18px;
+}
+.detail-title{
+  font:400 clamp(38px,5vw,64px)/.95 Georgia,"Times New Roman",serif;
+  letter-spacing:-.035em;
+  margin:0 0 18px;
+}
+.detail-price{
+  font-size:14px;
+  letter-spacing:.08em;
+  margin-bottom:28px;
+  font-weight:600;
+}
+.detail-desc{
+  color:var(--m);
+  font-size:14px;
+  line-height:1.9;
+  max-width:520px;
+  margin:0 0 22px;
+}
+.detail-dm{
+  color:var(--m);
+  font-size:12px;
+  line-height:1.7;
+  margin:0 0 28px;
+}
+.detail-dm strong{color:var(--e);font-weight:600}
+.order{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:100%;
+  max-width:260px;
+  min-height:46px;
+  padding:13px 22px;
+  border:1px solid var(--e);
+  background:var(--e);
+  color:var(--p);
+  text-decoration:none;
+  font-size:9px;
+  font-weight:600;
+  letter-spacing:.2em;
+  text-transform:uppercase;
+  transition:background .2s ease,color .2s ease,border-color .2s ease,transform .2s ease;
+}
+.order:hover{
+  background:var(--r);
+  border-color:var(--r);
+  color:var(--p);
+  transform:translateY(-1px);
+}
+.detail-meta{
+  margin-top:26px;
+  padding-top:17px;
+  border-top:1px solid var(--d);
+  font-size:9px;
+  letter-spacing:.18em;
+  color:var(--m);
+  text-transform:uppercase;
+}
+@media(max-width:760px){
+  .detail-backdrop{
+    padding:0;
+    align-items:stretch;
+  }
+  .detail{
+    width:100%;
+    height:100%;
+    max-height:none;
+    grid-template-columns:1fr;
+    border:0;
+    box-shadow:none;
+  }
+  .detail-media{
+    min-height:43vh;
+    height:43vh;
+  }
+  .detail-media img{padding:9%}
+  .detail-copy{
+    padding:30px 22px 38px;
+    justify-content:flex-start;
+  }
+  .detail-title{font-size:42px}
+  .detail-close{
+    right:12px;
+    top:12px;
+  }
+  .order{
+    max-width:none;
+    min-height:50px;
+  }
+}
+@media(max-width:390px){
+  .detail-media{min-height:38vh;height:38vh}
+  .detail-copy{padding:26px 18px 32px}
+  .detail-title{font-size:37px}
+}
+</style>
+</head>
+<body>
+<main class="lumora">
+<p class="kicker">THE BEAUTY EDIT</p>
+<h1>EXPLORE THE<br>BEAUTY COLLECTION.</h1>
+<p class="intro">Discover the complete Lumora beauty edit, thoughtfully selected for every part of your everyday ritual.</p>
+
+<div class="toolbar">
+<div class="filters">
+<button class="filter active" data-filter="ALL">ALL</button>
+<button class="filter" data-filter="SKINCARE">SKINCARE</button>
+<button class="filter" data-filter="LIPS">LIPS</button>
+<button class="filter" data-filter="TOOLS">TOOLS</button>
+<button class="filter" data-filter="MAKEUP">MAKEUP</button>
+<button class="filter" data-filter="HAIR CARE">HAIR CARE</button>
+<button class="filter" data-filter="SETS">SETS</button>
+</div>
+<div class="controls">
+<input id="search" class="search" type="search" placeholder="SEARCH THE EDIT" aria-label="Search">
+<select id="sort" class="sort" aria-label="Sort">
+<option value="featured">FEATURED</option><option value="az">A–Z</option><option value="low">PRICE: LOW–HIGH</option><option value="high">PRICE: HIGH–LOW</option>
+</select>
+</div>
+</div>
+
+<div class="meta"><span>LUMORA BEAUTY</span><span id="count" class="count"></span></div>
+<div id="grid" class="grid" aria-live="polite"></div>
+<div id="empty" class="empty" style="display:none"><h2>Nothing found.</h2><p>Try another search or collection.</p></div>
+<div class="actions" aria-label="Collection controls"><button id="load" class="load" type="button">LOAD MORE</button><button id="less" class="load less" type="button">SHOW LESS</button></div>
+
+</main>
+<div id="detailBackdrop" class="detail-backdrop" aria-hidden="true">
+  <section class="detail" role="dialog" aria-modal="true" aria-labelledby="detailTitle" tabindex="-1">
+    <button id="detailClose" class="detail-close" type="button" aria-label="Close product">×</button>
+    <div id="detailMedia" class="detail-media"></div>
+    <div class="detail-copy">
+      <div id="detailCat" class="detail-cat"></div>
+      <h2 id="detailTitle" class="detail-title"></h2>
+      <div id="detailPrice" class="detail-price"></div>
+      <p id="detailDesc" class="detail-desc"></p>
+      <p class="detail-dm"><strong>Need help before ordering?</strong><br>DM Lumora on TikTok if you have any questions about this product, and we'll be happy to help.</p>
+      <a id="detailOrder" class="order" href="https://www.tiktok.com/@lumora.shop30" target="_blank" rel="noopener">ORDER NOW</a>
+      <div id="detailMeta" class="detail-meta"></div>
+    </div>
+  </section>
+</div>
+
+
+<script>
+/*
+LUMORA PRODUCT DATABASE
+Retail price = landed cost × 4.
+For every product:
+image: "PASTE PUBLIC IMAGE URL"
+link:  "PASTE GOOGLE SITES PRODUCT SUBPAGE URL"
+*/
+
+const products=[
+["B001", "SKINCARE", "Vitamin C Face Whitening Serum", 24.99, "", ""],
+["B002", "SKINCARE", "Korean Skincare Cream", 20, "", ""],
+["B003", "SKINCARE", "Face Primer Gel Moisturizer", 25.99, "", ""],
+["B004", "SKINCARE", "Fruit Based Face Mask", 30, "", ""],
+["B005", "SKINCARE", "Eyebrows and Eyelashes Enhancer Serum", 39, "", ""],
+["B006", "SKINCARE", "Vitamin C Anti-Dark Circle Eye Cream", 20, "", ""],
+["B007", "SKINCARE", "Purple White Teethening Serum", 30, "", ""],
+["B008", "SKINCARE", "Hyaluronic Acid Serum", 8, "", ""],
+["B009", "SKINCARE", "Niacinamide Balance Serum", 9, "", ""],
+["B010", "SKINCARE", "Ceramide Barrier Cream", 10, "", ""],
+["B011", "SKINCARE", "Peptide Firming Serum", 11, "", ""],
+["B012", "SKINCARE", "Rice Brightening Essence", 12, "", ""],
+["B013", "SKINCARE", "Aloe Soothing Gel", 8, "", ""],
+["B014", "SKINCARE", "Snail Repair Essence", 13, "", ""],
+["B015", "SKINCARE", "Retinol Renewal Serum", 14, "", ""],
+["B016", "SKINCARE", "Salicylic Acid Clarifying Serum", 9, "", ""],
+["B017", "SKINCARE", "Green Tea Toner", 8, "", ""],
+["B018", "SKINCARE", "Rose Water Facial Mist", 7, "", ""],
+["B019", "SKINCARE", "Collagen Hydrogel Mask", 8, "", ""],
+["B020", "SKINCARE", "Clay Detox Face Mask", 9, "", ""],
+["B021", "SKINCARE", "Overnight Sleeping Mask", 12, "", ""],
+["B022", "SKINCARE", "Under Eye Hydrogel Patches", 8, "", ""],
+["B023", "SKINCARE", "Caffeine Eye Serum", 10, "", ""],
+["B024", "SKINCARE", "Gentle Foaming Cleanser", 9, "", ""],
+["B025", "SKINCARE", "Cream Facial Cleanser", 10, "", ""],
+["B026", "SKINCARE", "Cleansing Balm", 11, "", ""],
+["B027", "SKINCARE", "Micellar Cleansing Water", 8, "", ""],
+["B028", "SKINCARE", "PHA Gentle Toner", 10, "", ""],
+["B029", "SKINCARE", "AHA Glow Toner", 11, "", ""],
+["B030", "SKINCARE", "Peptide Face Cream", 13, "", ""],
+["B031", "SKINCARE", "Centella Calming Cream", 10, "", ""],
+["B032", "SKINCARE", "Vitamin E Comfort Cream", 9, "", ""],
+["B033", "SKINCARE", "Squalane Facial Oil", 12, "", ""],
+["B034", "SKINCARE", "Jojoba Facial Oil", 9, "", ""],
+["B035", "SKINCARE", "Bakuchiol Night Serum", 13, "", ""],
+["B036", "SKINCARE", "Azelaic Acid Serum", 11, "", ""],
+["B037", "SKINCARE", "Licorice Brightening Serum", 10, "", ""],
+["B038", "SKINCARE", "Barrier Repair Balm", 12, "", ""],
+["B039", "SKINCARE", "Daily SPF Face Cream", 14, "", ""],
+["B040", "SKINCARE", "Mineral Sunscreen", 12, "", ""],
+["B041", "SKINCARE", "Tinted Sunscreen", 13, "", ""],
+["B042", "SKINCARE", "Pore Refining Serum", 10, "", ""],
+["B043", "SKINCARE", "Glass Skin Essence", 12, "", ""],
+["B044", "SKINCARE", "Propolis Glow Serum", 13, "", ""],
+["B045", "SKINCARE", "Mugwort Essence", 11, "", ""],
+["B046", "SKINCARE", "Rice Cream Cleanser", 10, "", ""],
+["B047", "SKINCARE", "Matcha Cleansing Foam", 9, "", ""],
+["B048", "SKINCARE", "Charcoal Pore Mask", 9, "", ""],
+["B049", "SKINCARE", "Sea Mineral Mask", 10, "", ""],
+["B050", "SKINCARE", "Berry Antioxidant Mask", 11, "", ""],
+["B051", "SKINCARE", "Honey Comfort Mask", 9, "", ""],
+["B052", "SKINCARE", "Cica Recovery Serum", 12, "", ""],
+["B053", "SKINCARE", "Panthenol Serum", 10, "", ""],
+["B054", "SKINCARE", "Tranexamic Acid Serum", 13, "", ""],
+["B055", "SKINCARE", "Facial Mist Toner", 8, "", ""],
+["B056", "SKINCARE", "Firming Neck Cream", 15, "", ""],
+["B057", "SKINCARE", "Cooling Eye Gel", 10, "", ""],
+["B058", "SKINCARE", "Oat Comfort Cream", 9, "", ""],
+["B059", "SKINCARE", "Enzyme Powder Cleanser", 11, "", ""],
+["B060", "SKINCARE", "Multi-Peptide Eye Cream", 14, "", ""],
+["B061", "LIPS", "Lip Gloss Jelly", 19, "", ""],
+["B062", "LIPS", "Lip Gloss Moisturizer", 20, "", ""],
+["B063", "LIPS", "Lip Butter Balm", 10, "", ""],
+["B064", "LIPS", "Plumping Lip Gloss", 10, "", ""],
+["B065", "LIPS", "High Shine Lip Oil", 11, "", ""],
+["B066", "LIPS", "Tinted Lip Oil", 12, "", ""],
+["B067", "LIPS", "Hydrating Lip Serum", 13, "", ""],
+["B068", "LIPS", "Peptide Lip Treatment", 14, "", ""],
+["B069", "LIPS", "Overnight Lip Mask", 12, "", ""],
+["B070", "LIPS", "Sugar Lip Scrub", 8, "", ""],
+["B071", "LIPS", "Nourishing Lip Balm", 7, "", ""],
+["B072", "LIPS", "Tinted Rose Lip Balm", 8, "", ""],
+["B073", "LIPS", "Tinted Nude Lip Balm", 8, "", ""],
+["B074", "LIPS", "Tinted Berry Lip Balm", 8, "", ""],
+["B075", "LIPS", "Glossy Lip Tint", 10, "", ""],
+["B076", "LIPS", "Velvet Lip Tint", 10, "", ""],
+["B077", "LIPS", "Water Lip Tint", 9, "", ""],
+["B078", "LIPS", "Cooling Lip Gloss", 9, "", ""],
+["B079", "LIPS", "Clear Glass Lip Gloss", 8, "", ""],
+["B080", "LIPS", "Shimmer Lip Gloss", 10, "", ""],
+["B081", "LIPS", "Nude Lip Gloss", 9, "", ""],
+["B082", "LIPS", "Rose Lip Gloss", 9, "", ""],
+["B083", "LIPS", "Berry Lip Gloss", 9, "", ""],
+["B084", "LIPS", "Cocoa Lip Balm", 7, "", ""],
+["B085", "LIPS", "Vanilla Lip Balm", 7, "", ""],
+["B086", "LIPS", "Honey Lip Balm", 8, "", ""],
+["B087", "LIPS", "Cherry Lip Balm", 8, "", ""],
+["B088", "LIPS", "Shea Lip Butter", 9, "", ""],
+["B089", "LIPS", "Coconut Lip Butter", 9, "", ""],
+["B090", "LIPS", "Peptide Lip Butter", 11, "", ""],
+["B091", "LIPS", "Repair Lip Balm Stick", 8, "", ""],
+["B092", "LIPS", "SPF Lip Balm", 9, "", ""],
+["B093", "LIPS", "Lip Primer", 9, "", ""],
+["B094", "LIPS", "Nude Lip Liner", 8, "", ""],
+["B095", "LIPS", "Rose Lip Liner", 8, "", ""],
+["B096", "LIPS", "Brown Lip Liner", 8, "", ""],
+["B097", "LIPS", "Cream Lip Pencil", 9, "", ""],
+["B098", "LIPS", "Soft Matte Lip Cream", 10, "", ""],
+["B099", "LIPS", "Hydrating Matte Lipstick", 11, "", ""],
+["B100", "LIPS", "Satin Nude Lipstick", 11, "", ""],
+["B101", "LIPS", "Satin Rose Lipstick", 11, "", ""],
+["B102", "LIPS", "Satin Berry Lipstick", 11, "", ""],
+["B103", "LIPS", "Lip Mousse", 10, "", ""],
+["B104", "LIPS", "Lip Souffle", 10, "", ""],
+["B105", "LIPS", "Juicy Lip Tint", 9, "", ""],
+["B106", "LIPS", "Korean Lip Tint", 10, "", ""],
+["B107", "LIPS", "Gradient Lip Tint", 10, "", ""],
+["B108", "LIPS", "Glossy Lip Stain", 11, "", ""],
+["B109", "LIPS", "Lip Care Duo", 12, "", ""],
+["B110", "LIPS", "Lip Gloss Duo", 13, "", ""],
+["B111", "LIPS", "Lip Balm Duo", 11, "", ""],
+["B112", "LIPS", "Lip Mask + Scrub Set", 13, "", ""],
+["B113", "LIPS", "Lip Oil + Balm Set", 14, "", ""],
+["B114", "LIPS", "Lip Treatment Stick", 10, "", ""],
+["B115", "LIPS", "Moisture Lock Lip Serum", 12, "", ""],
+["B116", "LIPS", "Plump & Shine Treatment", 13, "", ""],
+["B117", "LIPS", "Crystal Clear Gloss", 9, "", ""],
+["B118", "LIPS", "Milky Lip Gloss", 9, "", ""],
+["B119", "LIPS", "Soft Pink Lip Gloss", 9, "", ""],
+["B120", "LIPS", "Caramel Nude Gloss", 10, "", ""],
+["B121", "TOOLS", "5pcs Makeup Pink Brush", 15, "", ""],
+["B122", "TOOLS", "10pcs Mini Makeup Sponge Black", 10, "", ""],
+["B123", "TOOLS", "Women's Eyebrow Razor", 9.99, "", ""],
+["B124", "TOOLS", "Heat Shape Stone Board Massage", 10, "", ""],
+["B125", "TOOLS", "Stainless Gua Sha", 8, "", ""],
+["B126", "TOOLS", "Rose Quartz Gua Sha", 10, "", ""],
+["B127", "TOOLS", "Facial Ice Roller", 9, "", ""],
+["B128", "TOOLS", "Mini Ice Globe Set", 12, "", ""],
+["B129", "TOOLS", "Silicone Cleansing Brush", 8, "", ""],
+["B130", "TOOLS", "Electric Cleansing Brush", 18, "", ""],
+["B131", "TOOLS", "Facial Massage Roller", 11, "", ""],
+["B132", "TOOLS", "Dual Facial Roller", 13, "", ""],
+["B133", "TOOLS", "Scalp Massage Brush", 7, "", ""],
+["B134", "TOOLS", "Shampoo Scalp Brush", 7, "", ""],
+["B135", "TOOLS", "Detangling Wet Brush", 9, "", ""],
+["B136", "TOOLS", "Wide Tooth Comb", 6, "", ""],
+["B137", "TOOLS", "Wooden Hair Comb", 8, "", ""],
+["B138", "TOOLS", "Anti-Static Comb", 7, "", ""],
+["B139", "TOOLS", "Curl Defining Comb", 8, "", ""],
+["B140", "TOOLS", "Edge Styling Brush", 6, "", ""],
+["B141", "TOOLS", "Hair Teasing Comb", 7, "", ""],
+["B142", "TOOLS", "Compact Detangling Brush", 9, "", ""],
+["B143", "TOOLS", "Heated Eyelash Curler", 15, "", ""],
+["B144", "TOOLS", "Manual Eyelash Curler", 6, "", ""],
+["B145", "TOOLS", "Brow Styling Brush", 5, "", ""],
+["B146", "TOOLS", "Dual Brow Tool", 7, "", ""],
+["B147", "TOOLS", "Precision Tweezers", 6, "", ""],
+["B148", "TOOLS", "Slant Tip Tweezers", 6, "", ""],
+["B149", "TOOLS", "Facial Hair Removal Tool", 8, "", ""],
+["B150", "TOOLS", "Reusable Makeup Puff Set", 8, "", ""],
+["B151", "TOOLS", "Velvet Makeup Puff Set", 9, "", ""],
+["B152", "TOOLS", "Teardrop Makeup Sponge", 5, "", ""],
+["B153", "TOOLS", "Mini Blender Sponge Set", 7, "", ""],
+["B154", "TOOLS", "Foundation Brush", 7, "", ""],
+["B155", "TOOLS", "Concealer Brush", 6, "", ""],
+["B156", "TOOLS", "Powder Brush", 8, "", ""],
+["B157", "TOOLS", "Blush Brush", 7, "", ""],
+["B158", "TOOLS", "Highlighter Brush", 7, "", ""],
+["B159", "TOOLS", "Angled Contour Brush", 7, "", ""],
+["B160", "TOOLS", "Eye Blender Brush", 6, "", ""],
+["B161", "TOOLS", "Eyeshadow Detail Brush", 5, "", ""],
+["B162", "TOOLS", "Lip Brush", 5, "", ""],
+["B163", "TOOLS", "Makeup Brush Travel Case", 10, "", ""],
+["B164", "TOOLS", "Brush Cleaning Mat", 7, "", ""],
+["B165", "TOOLS", "Silicone Brush Cleaner", 8, "", ""],
+["B166", "TOOLS", "Brush Drying Rack", 12, "", ""],
+["B167", "TOOLS", "Mini Facial Steamer", 22, "", ""],
+["B168", "TOOLS", "Portable Beauty Mirror", 15, "", ""],
+["B169", "TOOLS", "LED Makeup Mirror", 25, "", ""],
+["B170", "TOOLS", "Compact Vanity Mirror", 12, "", ""],
+["B171", "TOOLS", "Hair Sectioning Clips", 5, "", ""],
+["B172", "TOOLS", "Satin Scrunchie Set", 7, "", ""],
+["B173", "TOOLS", "Heatless Curling Rod Set", 9, "", ""],
+["B174", "TOOLS", "Hair Styling Clips", 6, "", ""],
+["B175", "TOOLS", "Brow Scissors", 6, "", ""],
+["B176", "TOOLS", "Facial Scissors", 7, "", ""],
+["B177", "TOOLS", "Nail Care Tool Set", 12, "", ""],
+["B178", "TOOLS", "Stainless Nail Buffer", 5, "", ""],
+["B179", "TOOLS", "Cooling Eye Mask", 7, "", ""],
+["B180", "TOOLS", "Silicone Mask Brush", 5, "", ""],
+["B181", "MAKEUP", "Liquid Eye Shadow Glitter Metallic", 10, "", ""],
+["B182", "MAKEUP", "Liquid Eye Shadow Rose Gold", 8, "", ""],
+["B183", "MAKEUP", "Liquid Eye Shadow Champagne", 8, "", ""],
+["B184", "MAKEUP", "Liquid Eye Shadow Bronze", 8, "", ""],
+["B185", "MAKEUP", "Liquid Eye Shadow Silver", 8, "", ""],
+["B186", "MAKEUP", "Liquid Eye Shadow Copper", 8, "", ""],
+["B187", "MAKEUP", "Metallic Eye Shadow Nude", 9, "", ""],
+["B188", "MAKEUP", "Cream Eyeshadow Stick", 8, "", ""],
+["B189", "MAKEUP", "Longwear Eyeshadow Stick", 9, "", ""],
+["B190", "MAKEUP", "Soft Matte Eyeshadow Palette", 14, "", ""],
+["B191", "MAKEUP", "Neutral Eyeshadow Palette", 16, "", ""],
+["B192", "MAKEUP", "Rose Tone Eyeshadow Palette", 16, "", ""],
+["B193", "MAKEUP", "Bronze Glow Eyeshadow Palette", 16, "", ""],
+["B194", "MAKEUP", "Cream Blush Nude", 9, "", ""],
+["B195", "MAKEUP", "Cream Blush Rose", 9, "", ""],
+["B196", "MAKEUP", "Cream Blush Peach", 9, "", ""],
+["B197", "MAKEUP", "Liquid Blush Soft Pink", 10, "", ""],
+["B198", "MAKEUP", "Liquid Blush Berry", 10, "", ""],
+["B199", "MAKEUP", "Powder Blush Rose", 9, "", ""],
+["B200", "MAKEUP", "Powder Blush Peach", 9, "", ""],
+["B201", "MAKEUP", "Silky Highlighter", 10, "", ""],
+["B202", "MAKEUP", "Liquid Highlighter Champagne", 11, "", ""],
+["B203", "MAKEUP", "Liquid Highlighter Pearl", 11, "", ""],
+["B204", "MAKEUP", "Glow Primer", 10, "", ""],
+["B205", "MAKEUP", "Hydrating Makeup Primer", 11, "", ""],
+["B206", "MAKEUP", "Pore Smoothing Primer", 12, "", ""],
+["B207", "MAKEUP", "Tinted Face Primer", 11, "", ""],
+["B208", "MAKEUP", "Light Coverage Skin Tint", 13, "", ""],
+["B209", "MAKEUP", "Natural Finish Foundation", 15, "", ""],
+["B210", "MAKEUP", "Soft Matte Foundation", 15, "", ""],
+["B211", "MAKEUP", "Radiant Concealer", 10, "", ""],
+["B212", "MAKEUP", "Brightening Concealer", 10, "", ""],
+["B213", "MAKEUP", "Cream Contour Stick", 11, "", ""],
+["B214", "MAKEUP", "Soft Sculpt Contour", 12, "", ""],
+["B215", "MAKEUP", "Bronzing Powder", 11, "", ""],
+["B216", "MAKEUP", "Cream Bronzer", 11, "", ""],
+["B217", "MAKEUP", "Setting Powder", 10, "", ""],
+["B218", "MAKEUP", "Translucent Loose Powder", 11, "", ""],
+["B219", "MAKEUP", "Pressed Setting Powder", 10, "", ""],
+["B220", "MAKEUP", "Dewy Setting Spray", 10, "", ""],
+["B221", "MAKEUP", "Longwear Setting Spray", 11, "", ""],
+["B222", "MAKEUP", "Brown Liquid Eyeliner", 7, "", ""],
+["B223", "MAKEUP", "Black Liquid Eyeliner", 7, "", ""],
+["B224", "MAKEUP", "Gel Eyeliner Pencil", 6, "", ""],
+["B225", "MAKEUP", "Waterproof Mascara", 9, "", ""],
+["B226", "MAKEUP", "Lengthening Mascara", 9, "", ""],
+["B227", "MAKEUP", "Volumizing Mascara", 9, "", ""],
+["B228", "MAKEUP", "Clear Brow Gel", 7, "", ""],
+["B229", "MAKEUP", "Brown Brow Gel", 7, "", ""],
+["B230", "MAKEUP", "Taupe Brow Pencil", 6, "", ""],
+["B231", "MAKEUP", "Brown Brow Pencil", 6, "", ""],
+["B232", "MAKEUP", "Brow Powder Duo", 8, "", ""],
+["B233", "MAKEUP", "Soft Nude Lipstick", 10, "", ""],
+["B234", "MAKEUP", "Rose Nude Lipstick", 10, "", ""],
+["B235", "MAKEUP", "Berry Lipstick", 10, "", ""],
+["B236", "MAKEUP", "Peach Lipstick", 10, "", ""],
+["B237", "MAKEUP", "Mauve Lipstick", 10, "", ""],
+["B238", "MAKEUP", "Makeup Removal Balm", 10, "", ""],
+["B239", "MAKEUP", "Gentle Makeup Remover", 8, "", ""],
+["B240", "MAKEUP", "Makeup Fixing Mist", 10, "", ""],
+["B241", "HAIR CARE", "Frizz Reset Comb", 54.99, "", ""],
+["B242", "HAIR CARE", "Portable Hair Straightening Comb", 59, "", ""],
+["B243", "HAIR CARE", "Anti-Frizz Hair Serum", 10, "", ""],
+["B244", "HAIR CARE", "Smoothing Hair Oil", 11, "", ""],
+["B245", "HAIR CARE", "Lightweight Hair Oil", 9, "", ""],
+["B246", "HAIR CARE", "Argan Hair Serum", 12, "", ""],
+["B247", "HAIR CARE", "Keratin Hair Serum", 13, "", ""],
+["B248", "HAIR CARE", "Heat Protectant Spray", 10, "", ""],
+["B249", "HAIR CARE", "Leave-In Conditioning Mist", 9, "", ""],
+["B250", "HAIR CARE", "Hydrating Leave-In Cream", 11, "", ""],
+["B251", "HAIR CARE", "Curl Defining Cream", 10, "", ""],
+["B252", "HAIR CARE", "Curl Refresh Spray", 9, "", ""],
+["B253", "HAIR CARE", "Hair Repair Mask", 11, "", ""],
+["B254", "HAIR CARE", "Deep Conditioning Mask", 12, "", ""],
+["B255", "HAIR CARE", "Keratin Hair Mask", 13, "", ""],
+["B256", "HAIR CARE", "Coconut Hair Mask", 10, "", ""],
+["B257", "HAIR CARE", "Scalp Detox Scrub", 10, "", ""],
+["B258", "HAIR CARE", "Scalp Tonic", 10, "", ""],
+["B259", "HAIR CARE", "Scalp Growth Tonic", 12, "", ""],
+["B260", "HAIR CARE", "Nourishing Hair Conditioner", 9, "", ""],
+["B261", "HAIR CARE", "Silky Hair Shampoo", 9, "", ""],
+["B262", "HAIR CARE", "Hydrating Hair Shampoo", 10, "", ""],
+["B263", "HAIR CARE", "Clarifying Shampoo", 9, "", ""],
+["B264", "HAIR CARE", "Volume Boost Shampoo", 10, "", ""],
+["B265", "HAIR CARE", "Repair Hair Shampoo", 11, "", ""],
+["B266", "HAIR CARE", "Anti-Dandruff Shampoo", 9, "", ""],
+["B267", "HAIR CARE", "Smoothing Hair Conditioner", 10, "", ""],
+["B268", "HAIR CARE", "Volume Hair Conditioner", 10, "", ""],
+["B269", "HAIR CARE", "Repair Hair Conditioner", 11, "", ""],
+["B270", "HAIR CARE", "Hair Gloss Treatment", 13, "", ""],
+["B271", "HAIR CARE", "At-Home Hair Gloss", 14, "", ""],
+["B272", "HAIR CARE", "Split End Repair Cream", 10, "", ""],
+["B273", "HAIR CARE", "Hair Fragrance Mist", 11, "", ""],
+["B274", "HAIR CARE", "Heat Styling Spray", 10, "", ""],
+["B275", "HAIR CARE", "Blow Dry Cream", 11, "", ""],
+["B276", "HAIR CARE", "Hair Shine Spray", 9, "", ""],
+["B277", "HAIR CARE", "Texturizing Hair Mist", 10, "", ""],
+["B278", "HAIR CARE", "Root Touch-Up Powder", 9, "", ""],
+["B279", "HAIR CARE", "Hair Edge Control", 7, "", ""],
+["B280", "HAIR CARE", "Hair Styling Wax", 8, "", ""],
+["B281", "HAIR CARE", "Hair Wax Stick", 8, "", ""],
+["B282", "HAIR CARE", "Hair Styling Cream", 9, "", ""],
+["B283", "HAIR CARE", "Flexible Hold Hair Spray", 9, "", ""],
+["B284", "HAIR CARE", "Strong Hold Hair Spray", 10, "", ""],
+["B285", "HAIR CARE", "Dry Shampoo Foam", 10, "", ""],
+["B286", "HAIR CARE", "Dry Shampoo Powder", 9, "", ""],
+["B287", "HAIR CARE", "Hair Scalp Brush", 7, "", ""],
+["B288", "HAIR CARE", "Silicone Scalp Massager", 8, "", ""],
+["B289", "HAIR CARE", "Satin Sleep Hair Cap", 8, "", ""],
+["B290", "HAIR CARE", "Hair Wrap", 8, "", ""],
+["B291", "HAIR CARE", "Hair Towel Wrap", 9, "", ""],
+["B292", "HAIR CARE", "Microfiber Hair Towel", 8, "", ""],
+["B293", "HAIR CARE", "Hair Care Travel Set", 15, "", ""],
+["B294", "HAIR CARE", "Repair Hair Oil Set", 18, "", ""],
+["B295", "HAIR CARE", "Hydration Hair Duo", 17, "", ""],
+["B296", "HAIR CARE", "Scalp Care Duo", 16, "", ""],
+["B297", "HAIR CARE", "Curl Care Duo", 18, "", ""],
+["B298", "HAIR CARE", "Smooth & Shine Duo", 17, "", ""],
+["B299", "HAIR CARE", "Hair Mask + Cap Set", 16, "", ""],
+["B300", "HAIR CARE", "Hair Serum + Comb Set", 19, "", ""],
+["B301", "SETS", "Hydration Skincare Duo", 12, "", ""],
+["B302", "SETS", "Vitamin C Brightening Duo", 13, "", ""],
+["B303", "SETS", "Daily Skincare Starter Set", 15, "", ""],
+["B304", "SETS", "Morning Skincare Ritual Set", 16, "", ""],
+["B305", "SETS", "Evening Skincare Ritual Set", 17, "", ""],
+["B306", "SETS", "Glass Skin Starter Set", 18, "", ""],
+["B307", "SETS", "Korean Skincare Essentials Set", 20, "", ""],
+["B308", "SETS", "Barrier Care Set", 18, "", ""],
+["B309", "SETS", "Sensitive Skin Care Set", 19, "", ""],
+["B310", "SETS", "Glow & Hydrate Set", 20, "", ""],
+["B311", "SETS", "Clarify & Balance Set", 18, "", ""],
+["B312", "SETS", "Anti-Aging Skincare Set", 22, "", ""],
+["B313", "SETS", "Radiance Ritual Set", 21, "", ""],
+["B314", "SETS", "Deep Moisture Set", 20, "", ""],
+["B315", "SETS", "Eye Care Duo", 15, "", ""],
+["B316", "SETS", "Eye & Lip Care Set", 17, "", ""],
+["B317", "SETS", "Face Mask Collection Set", 18, "", ""],
+["B318", "SETS", "Clay Mask Trio", 17, "", ""],
+["B319", "SETS", "Hydrogel Mask Trio", 18, "", ""],
+["B320", "SETS", "Sheet Mask Variety Set", 16, "", ""],
+["B321", "SETS", "Facial Oil Collection", 24, "", ""],
+["B322", "SETS", "Serum Discovery Set", 25, "", ""],
+["B323", "SETS", "Mini Serum Collection", 22, "", ""],
+["B324", "SETS", "Cleanse & Tone Duo", 16, "", ""],
+["B325", "SETS", "Cleanse & Moisturize Set", 18, "", ""],
+["B326", "SETS", "Cleanse & Treat Set", 19, "", ""],
+["B327", "SETS", "Toner & Essence Duo", 18, "", ""],
+["B328", "SETS", "Serum & Cream Duo", 20, "", ""],
+["B329", "SETS", "Moisturizer Duo", 18, "", ""],
+["B330", "SETS", "Lip Care Ritual Set", 15, "", ""],
+["B331", "SETS", "Lip Gloss Trio", 18, "", ""],
+["B332", "SETS", "Lip Balm Collection", 15, "", ""],
+["B333", "SETS", "Lip Oil Duo", 17, "", ""],
+["B334", "SETS", "Lip Tint Trio", 18, "", ""],
+["B335", "SETS", "Lip Makeup Essentials Set", 20, "", ""],
+["B336", "SETS", "Everyday Makeup Set", 24, "", ""],
+["B337", "SETS", "Natural Makeup Starter Set", 25, "", ""],
+["B338", "SETS", "Eye Makeup Essentials Set", 23, "", ""],
+["B339", "SETS", "Brow & Lash Set", 18, "", ""],
+["B340", "SETS", "Brush Essentials Set", 20, "", ""],
+["B341", "SETS", "Makeup Sponge Collection", 15, "", ""],
+["B342", "SETS", "Beauty Tools Starter Set", 22, "", ""],
+["B343", "SETS", "Facial Massage Tool Set", 24, "", ""],
+["B344", "SETS", "Gua Sha Ritual Set", 20, "", ""],
+["B345", "SETS", "Ice Roller Ritual Set", 18, "", ""],
+["B346", "SETS", "Hair Styling Essentials Set", 22, "", ""],
+["B347", "SETS", "Hair Repair Ritual Set", 24, "", ""],
+["B348", "SETS", "Frizz Control Hair Set", 25, "", ""],
+["B349", "SETS", "Hydration Hair Set", 22, "", ""],
+["B350", "SETS", "Curl Care Starter Set", 24, "", ""],
+["B351", "SETS", "Scalp Care Ritual Set", 21, "", ""],
+["B352", "SETS", "Hair Wash Duo", 18, "", ""],
+["B353", "SETS", "Hair Styling Duo", 20, "", ""],
+["B354", "SETS", "Hair Gloss Set", 22, "", ""],
+["B355", "SETS", "Beauty Travel Essentials Set", 25, "", ""],
+["B356", "SETS", "Weekend Beauty Set", 28, "", ""],
+["B357", "SETS", "Self-Care Ritual Set", 30, "", ""],
+["B358", "SETS", "Complete Beauty Starter Set", 35, "", ""],
+["B359", "SETS", "Lumora Everyday Beauty Set", 38, "", ""],
+["B360", "SETS", "Green Tea Face Mask + Roller", 25.99, "", ""]
+];
+
+/*
+Each row:
+[id, category, name, landed cost, image URL, product-page URL]
+
+Retail price is calculated automatically at 4× landed cost.
+For each product, replace the final two empty strings with:
+1) a public product image URL
+2) the Google Sites product subpage URL
+*/
+
+const data=products.map(([id,category,name,cost,image,link])=>({
+ id,category,name,cost,
+ price:Math.round(cost*4*100)/100,
+ image:image||"",
+ link:link||""
+}));
+
+const INITIAL=8;
+const STEP=8;
+let filter="ALL",query="",sortMode="featured",visible=INITIAL;
+
+const grid=document.getElementById("grid");
+const count=document.getElementById("count");
+const empty=document.getElementById("empty");
+const load=document.getElementById("load");
+const less=document.getElementById("less");
+const search=document.getElementById("search");
+const sort=document.getElementById("sort");
+
+function esc(v){
+ return String(v).replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;"}[m]));
+}
+
+function getItems(){
+ let a=data.filter(p=>
+   (filter==="ALL"||p.category===filter) &&
+   (p.name+" "+p.category).toLowerCase().includes(query.toLowerCase())
+ );
+ if(sortMode==="az")a.sort((x,y)=>x.name.localeCompare(y.name));
+ if(sortMode==="low")a.sort((x,y)=>x.price-y.price);
+ if(sortMode==="high")a.sort((x,y)=>y.price-x.price);
+ return a;
+}
+
+function money(n){
+ return new Intl.NumberFormat("en-US",{style:"currency",currency:"USD"}).format(n);
+}
+
+
+function productDescription(p){
+ const n=p.name.toLowerCase();
+ const category=p.category;
+ if(n.includes("green tea face mask") && n.includes("roller"))
+   return `A refreshing two-piece beauty ritual that pairs a calming green tea face mask with a cooling facial roller. Designed for a quiet, considered moment in your everyday routine.`;
+ if(n.includes("lip gloss jelly"))
+   return `A glossy lip essential selected for a smooth, luminous finish and an effortless everyday beauty moment.`;
+ if(n.includes("lip gloss moisturizer"))
+   return `A comfortable lip essential that brings together a soft, polished finish with an easy everyday feel.`;
+ if(n.includes("lip butter balm"))
+   return `A simple lip-care essential selected for everyday comfort and a soft, polished finish.`;
+ if(n.includes("lip"))
+   return `A considered lip essential selected to bring a polished finishing touch to your everyday beauty ritual.`;
+ if(n.includes("vitamin c face whitening serum"))
+   return `A lightweight vitamin C serum selected as a brightening addition to an everyday skincare routine, with a clean, easy-to-layer feel.`;
+ if(n.includes("anti-dark circle eye cream"))
+   return `A focused eye-care essential selected to bring a considered touch to the delicate area around the eyes.`;
+ if(n.includes("teethening") || n.includes("teeth"))
+   return `A beauty-care essential selected to bring a simple, considered step to an everyday smile-care routine.`;
+ if(n.includes("primer gel moisturizer"))
+   return `A versatile beauty essential selected to bring a smooth, comfortable-feeling step into the everyday preparation routine.`;
+ if(n.includes("cream") || n.includes("moisturizer"))
+   return `A refined skincare essential selected to bring a comfortable, cared-for feel to a simple daily ritual.`;
+ if(n.includes("mask"))
+   return `A ritual-focused beauty essential designed to turn a few quiet minutes into a considered part of your routine.`;
+ if(n.includes("serum"))
+   return `A thoughtfully selected serum designed to become an effortless part of an everyday beauty ritual, with a simple and considered place in the routine.`;
+ if(n.includes("comb"))
+   return `A practical hair-care essential selected to make everyday preparation feel more intentional, polished, and easy to work into the routine.`;
+ if(n.includes("brush") || n.includes("sponge") || n.includes("razor") || n.includes("roller") || n.includes("massage") || n.includes("tool"))
+   return `A practical beauty tool selected to make everyday preparation and personal rituals feel more considered, simple, and effortless.`;
+ if(n.includes("shadow") || n.includes("makeup"))
+   return `A considered makeup essential selected to add an expressive finishing touch while keeping the overall beauty ritual effortless.`;
+ if(category==="SETS")
+   return `A thoughtfully assembled beauty selection designed to bring complementary essentials together in one considered ritual.`;
+ if(category==="HAIR CARE")
+   return `A beauty essential selected to make everyday hair care feel more considered, effortless, and easy to work into your routine.`;
+ return `A considered Lumora beauty essential selected for everyday rituals, quiet refinement, and the details that make a routine feel distinctly your own.`;
+}
+
+const detailBackdrop=document.getElementById("detailBackdrop");
+const detailClose=document.getElementById("detailClose");
+const detailMedia=document.getElementById("detailMedia");
+const detailCat=document.getElementById("detailCat");
+const detailTitle=document.getElementById("detailTitle");
+const detailPrice=document.getElementById("detailPrice");
+const detailDesc=document.getElementById("detailDesc");
+const detailMeta=document.getElementById("detailMeta");
+const detailOrder=document.getElementById("detailOrder");
+let lastFocused=null;
+let lockedScrollY=0;
+
+function lockPage(){
+ lockedScrollY=window.scrollY||document.documentElement.scrollTop||0;
+ document.documentElement.classList.add("is-locked");
+ document.body.classList.add("is-locked");
+}
+function unlockPage(){
+ document.documentElement.classList.remove("is-locked");
+ document.body.classList.remove("is-locked");
+ window.scrollTo(0,lockedScrollY);
+}
+
+function openProduct(id,updateHash=true){
+ const p=data.find(x=>x.id===id); if(!p)return;
+ lastFocused=document.activeElement;
+ detailCat.textContent=p.category;
+ detailTitle.textContent=p.name;
+ detailPrice.textContent=money(p.price);
+ detailDesc.textContent=productDescription(p);
+ detailMeta.textContent=`LUMORA BEAUTY · ${p.id}`;
+ detailOrder.href="https://www.tiktok.com/@lumora.shop30";
+ detailMedia.innerHTML=p.image
+   ? `<img src="${esc(p.image)}" alt="${esc(p.name)}" decoding="async" referrerpolicy="no-referrer">`
+   : `<div class="placeholder">ADD PRODUCT IMAGE</div>`;
+ const img=detailMedia.querySelector("img");
+ if(img) img.addEventListener("error",()=>{detailMedia.innerHTML='<div class="placeholder">IMAGE UNAVAILABLE</div>';},{once:true});
+ if(updateHash) history.replaceState(null,"","#product="+encodeURIComponent(p.id));
+ detailBackdrop.classList.add("open");
+ detailBackdrop.setAttribute("aria-hidden","false");
+ lockPage();
+ requestAnimationFrame(()=>detailClose.focus());
+}
+function closeProduct(updateHistory=true){
+ if(!detailBackdrop.classList.contains("open"))return;
+ detailBackdrop.classList.remove("open");
+ detailBackdrop.setAttribute("aria-hidden","true");
+ unlockPage();
+ if(updateHistory && location.hash.startsWith("#product="))
+   history.replaceState(null,"",location.pathname+location.search);
+ if(lastFocused && typeof lastFocused.focus==="function") lastFocused.focus();
+}
+
+detailClose.addEventListener("click",()=>closeProduct());
+detailBackdrop.addEventListener("click",e=>{if(e.target===detailBackdrop)closeProduct()});
+document.addEventListener("keydown",e=>{
+ if(e.key==="Escape") closeProduct();
+ if(e.key==="Tab" && detailBackdrop.classList.contains("open")){
+   const focusables=[detailClose,detailOrder].filter(el=>el && !el.disabled);
+   if(!focusables.length)return;
+   const first=focusables[0],last=focusables[focusables.length-1];
+   if(e.shiftKey && document.activeElement===first){e.preventDefault();last.focus();}
+   else if(!e.shiftKey && document.activeElement===last){e.preventDefault();first.focus();}
+ }
+});
+document.addEventListener("click",e=>{
+ const b=e.target.closest("[data-product]");
+ if(b)openProduct(b.dataset.product);
+});
+function openHashProduct(){
+ const m=location.hash.match(/^#product=(.+)$/);
+ if(m)openProduct(decodeURIComponent(m[1]),false);
+}
+window.addEventListener("hashchange",openHashProduct);
+
+function render(){
+ const all=getItems();
+ const shown=all.slice(0,visible);
+ grid.innerHTML=shown.map((p)=>`
+ <article class="product">
+  <div class="image">
+   <span class="index">${String(data.indexOf(p)+1).padStart(3,"0")}</span>
+   ${p.image?
+    `<img src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy" decoding="async" referrerpolicy="no-referrer">
+     <div class="placeholder" hidden>IMAGE UNAVAILABLE</div>`:
+    `<div class="placeholder">ADD PRODUCT IMAGE</div>`}
+  </div>
+  <div class="cat">${esc(p.category)}</div>
+  <h2 class="name">${esc(p.name)}</h2>
+  <div class="price">${money(p.price)}</div>
+  <button class="view" type="button" data-product="${esc(p.id)}" aria-label="View ${esc(p.name)}">VIEW PRODUCT</button>
+ </article>`).join("");
+
+ grid.querySelectorAll("img").forEach(img=>{
+   img.addEventListener("error",()=>{
+     img.style.display="none";
+     const fallback=img.nextElementSibling;
+     if(fallback)fallback.hidden=false;
+   },{once:true});
+ });
+
+ count.textContent=`${all.length} ${all.length===1?"PRODUCT":"PRODUCTS"}`;
+ empty.style.display=all.length?"none":"block";
+ load.style.display=visible<all.length?"inline-flex":"none";
+ less.style.display=visible>INITIAL?"inline-flex":"none";
+ load.setAttribute("aria-hidden",visible<all.length?"false":"true");
+ less.setAttribute("aria-hidden",visible>INITIAL?"false":"true");
+}
+
+document.querySelectorAll(".filter").forEach(btn=>btn.addEventListener("click",()=>{
+ document.querySelectorAll(".filter").forEach(x=>x.classList.remove("active"));
+ btn.classList.add("active");
+ filter=btn.dataset.filter;visible=INITIAL;render();
+}));
+
+search.addEventListener("input",()=>{query=search.value.trim();visible=INITIAL;render()});
+sort.addEventListener("change",()=>{sortMode=sort.value;visible=INITIAL;render()});
+load.addEventListener("click",()=>{visible+=STEP;render()});
+less.addEventListener("click",()=>{visible=INITIAL;render();document.querySelector(".toolbar").scrollIntoView({behavior:"smooth",block:"start"})});
+
+render();
+openHashProduct();
+</script>
+</body>
+</html>
